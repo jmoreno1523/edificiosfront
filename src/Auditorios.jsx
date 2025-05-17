@@ -11,6 +11,11 @@ const Auditorios = () => {
   const [respuesta, setRespuesta] = useState('');
   const navigate = useNavigate();
 
+  // ⚙️ Detecta si estás en desarrollo o producción
+  const baseURL = import.meta.env.MODE === 'development'
+    ? 'http://localhost:5000'
+    : 'https://edificios-back-psi.vercel.app';
+
   useEffect(() => {
     setEdificios([
       'Almendros',
@@ -26,10 +31,10 @@ const Auditorios = () => {
 
   useEffect(() => {
     if (edificioSeleccionado) {
-      axios.get(`http://localhost:5000/api/edificios/${edificioSeleccionado}`)
+      axios.get(`${baseURL}/api/edificios/${edificioSeleccionado}`)
         .then(res => setAuditorios(res.data))
         .catch(err => {
-          console.error("❌ Error cargando auditorios:", err);
+          console.error("❌ Error cargando auditorios:", err.message, err.response?.data || '');
           setAuditorios([]);
         });
     } else {
@@ -48,13 +53,13 @@ const Auditorios = () => {
       return;
     }
     try {
-      const res = await axios.post('https://edificios-back-psi.vercel.app/api/chatgpt', {
+      const res = await axios.post(`${baseURL}/api/chatgpt`, {
         pregunta,
         edificio: edificioSeleccionado || undefined
       });
       setRespuesta(res.data.respuesta);
     } catch (err) {
-      console.error("❌ Error al consultar ChatGPT:", err);
+      console.error("❌ Error al consultar ChatGPT:", err.message, err.response?.data || '');
       setRespuesta("Error al obtener respuesta de la IA.");
     }
   };
@@ -103,3 +108,4 @@ const Auditorios = () => {
 };
 
 export default Auditorios;
+
