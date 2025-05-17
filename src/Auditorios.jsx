@@ -48,7 +48,7 @@ const Auditorios = () => {
       return;
     }
     try {
-      const res = await axios.post('http://localhost:5000/api/chatgpt', {
+      const res = await axios.post('https://edificios-back-psi.vercel.app/api/chatgpt', {
         pregunta,
         edificio: edificioSeleccionado || undefined
       });
